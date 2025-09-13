@@ -8,7 +8,7 @@ import { IconArrowUpRight } from "@tabler/icons-react";
 export default function Navbar() {
 
     return (
-        <div className="fixed max-w-3xl w-[90%] md:w-full h-fit mx-auto top-4 z-50 flex items-center justify-between place-self-center flex-wrap gap-2 p-2 px-4 mt-4 rounded-xl bg-teal-50/10 shadow-lg shadow-neutral-600/5 backdrop-blur-md">
+        <div className="fixed max-w-3xl w-[90%] md:w-full h-fit mx-auto top-4 z-50 flex items-center justify-between place-self-center flex-wrap gap-2 px-4 py-3 mt-4 rounded-xl bg-teal-50/10 shadow-lg shadow-neutral-600/5 backdrop-blur-md">
             <div className="flex w-full justify-between items-center">
                 <Link href={"/"} className="flex items-center gap-2 cursor-pointer">
                     <span className="inline-flex items-center gap-2 text-green-200/80 font-bold rounded-lg uppercase tracking-widest shadow-2xl text-xs sm:text-sm p-2">
