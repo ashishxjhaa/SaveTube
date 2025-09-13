@@ -76,16 +76,22 @@ export default function Main() {
             </div>
         </div>
         </div>
+
+        <div className="flex flex-col w-full max-w-sm sm:max-w-2xl mx-auto pt-20 sm:pt-30">
+            <div className="flex justify-center p-3 border border-gray-600 rounded-2xl">
+                <div className="flex">
+                <div className="flex flex-col transition-all duration-300 border border-dashed border-teal-500 bg-transparent min-h-16 sm:min-h-20 w-full rounded-xl p-2">
+                    <div className="h-[28vh] sm:h-[29vh] min-w-[50vh] max-w-[50vh] rounded-lg shadow-md object-cover bg-white"></div>
+                    <div className="p-2 font-medium sm:font-bold text-sm sm:text-lg min-w-[50vh] max-w-[50vh]">FULL BOYCOTT! People are VERY ANGRY 😡| Ashneer POKES Salman, Kapil Sharma, Dhruv Rathee,</div>
+                </div>
+                <div>Video Link</div>
+                <div>choose Quality</div>
+                <div>Download</div>
+                </div>
+            </div>
+        </div> 
+
+
     </div>
     );
 }
-
-
-{/* <div className="flex flex-col w-full max-w-sm sm:max-w-2xl mx-auto pt-20 sm:pt-30">
-    <div className="flex justify-center p-3 border border-gray-600 rounded-2xl">
-        <div className="transition-all duration-300 border border-dashed border-teal-500 bg-transparent hover:bg-teal-950 flex min-h-16 sm:min-h-20 w-full items-center justify-center rounded-xl cursor-pointer text-sm sm:text-base">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Website
-        </div>
-    </div>
-</div> */}

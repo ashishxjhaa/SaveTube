@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import ytdl from "ytdl-core";
 
 export async function POST(req: Request) {
     try {
@@ -15,7 +16,35 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Invalid YouTube link" }, { status: 400 });
         }
 
-        return NextResponse.json({ success: true, message: "Valid YouTube URL", url });
+        const info = await ytdl.getInfo(url);
+
+        const title = info.videoDetails.title;
+        
+        const thumbnails = info.videoDetails.thumbnails;
+        const thumbnailUrl = thumbnails[thumbnails.length - 1].url;
+
+        const lengthSeconds = parseInt(info.videoDetails.lengthSeconds, 10);
+
+        const videoUrl = info.videoDetails.video_url;
+
+        const formats = info.formats.map((f) => ({
+            itag: f.itag,
+            container: f.container,
+            qualityLabel: f.qualityLabel,
+            audioBitrate: f.audioBitrate,
+            hasVideo: !!f.hasVideo,
+            hasAudio: !!f.hasAudio,
+        }));
+
+        return NextResponse.json({ 
+            success: true, 
+            message: "Valid YouTube URL", 
+            title,
+            thumbnail: thumbnailUrl,
+            lengthSeconds,
+            videoUrl,
+            formats,
+        });
     } catch (err) {
         return NextResponse.json(
             { error: "Something went wrong" },
