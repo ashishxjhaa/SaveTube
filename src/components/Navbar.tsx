@@ -14,7 +14,7 @@ export default function Navbar() {
                     <span className="inline-flex items-center gap-2 text-green-200/80 font-bold rounded-lg uppercase tracking-widest shadow-2xl text-xs sm:text-sm p-2">
                         <Image src="/icon.svg" alt="SaveVideo" width={16} height={16} />
                         <svg className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 text-teal-300" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" /></svg>
-                        SaveVideo
+                        SaveTube
                     </span>
                 </Link>
 

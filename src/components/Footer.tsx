@@ -1,4 +1,5 @@
-'use client'
+"use client";
+
 import Link from "next/link";
 import { Heart, Github, Mail, Globe } from "lucide-react";
 import Image from "next/image";
@@ -8,7 +9,7 @@ const Footer = () => {
 
   return (
     <div className="w-full mt-20 mb-8">
-        <div className="w-full border-t border-gray-600 [mask-image:linear-gradient(to_right,transparent,black,transparent)]" />
+        <div className="w-full md:w-[90%] border-t border-gray-600 [mask-image:linear-gradient(to_right,transparent,black,transparent)]" />
             <div className="max-w-4xl mx-auto px-6">
                 <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent mb-8" />
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6">
@@ -22,8 +23,8 @@ const Footer = () => {
                                 v0.1
                             </span>
                         </div>
-                        <p className="text-sm opacity-80 text-center md:text-left">
-                            Paste. Download. Save.
+                        <p className="text-md opacity-75 text-center md:text-left">
+                            Paste. Choose. Download.
                         </p>
                     </div>
 
@@ -42,10 +43,10 @@ const Footer = () => {
                         </Link>
                     </div>
 
-                    <div className="flex items-center gap-2 text-sm opacity-80">
-                        <span>© {currentYear} SaveTube</span>
+                    <div className="flex items-center gap-2 text-sm">
+                        <span className="opacity-75">© {currentYear} SaveTube</span>
                         <span className="text-teal-400">•</span>
-                        <span>Made with</span>
+                        <span className="opacity-75">Made with</span>
                         <Heart className="w-4 h-4 text-teal-400 fill-current" />
                     </div>
                 </div>
