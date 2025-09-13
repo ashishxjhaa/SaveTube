@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FaGithub } from "react-icons/fa";
+import { IconArrowUpRight } from "@tabler/icons-react";
 
 export default function Navbar() {
 
@@ -17,10 +18,13 @@ export default function Navbar() {
                     </span>
                 </Link>
 
-                <div className="text-white flex items-center gap-2 cursor-pointer px-2.5 py-1 border-1 rounded-md border-gray-600 hover:border-teal-300">
-                    <FaGithub />
-                   Star me on GitHub
-                </div>
+                <Link href="https://github.com/ashishxjhaa/SaveTube" onClick={() => new Audio("/switchtab.mp3").play()} target="_blank" className="opacity-70 flex items-center gap-2 mx-4 relative group transition-opacity hover:opacity-100">
+                    <span className="flex items-center font-bold gap-2 transition-transform duration-500 ease-in-out group-hover:-translate-x-2">
+                        <FaGithub />
+                        Star me on GitHub
+                    </span>
+                    <IconArrowUpRight size={48} strokeWidth={1} className="absolute h-[22px] -right-8 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 text-white" />
+                </Link>
             </div>
         </div>
 
