@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, Github, Mail, Globe } from "lucide-react";
+import { Heart, Mail, Globe } from "lucide-react";
+import { BsTwitterX } from "react-icons/bs";
 import Image from "next/image";
 
 const Footer = () => {
@@ -29,9 +30,9 @@ const Footer = () => {
                     </div>
 
                     <div className="flex items-center gap-6">
-                        <Link href="https://github.com/ashishxjhaa" className="flex items-center gap-2 text-sm opacity-80 hover:opacity-100" target="_blank" rel="noopener noreferrer">
-                            <Github className="w-4 h-4" />
-                            <span className="hidden sm:inline">GitHub</span>
+                        <Link href="https://x.com/ashishxjha" className="flex items-center gap-2 text-sm opacity-80 hover:opacity-100" target="_blank" rel="noopener noreferrer">
+                            <BsTwitterX className="w-3.5 h-3.5" />
+                            <span className="hidden sm:inline">Twitter</span>
                         </Link>
                         <Link href="mailto:ashishxyzjha@gmail.com" className="flex items-center gap-2 text-sm opacity-80 hover:opacity-100">
                             <Mail className="w-4 h-4" />
