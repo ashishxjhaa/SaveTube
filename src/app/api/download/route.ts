@@ -63,7 +63,6 @@ export async function POST(req: Request) {
             formats : videoFormats,
         }, { status: 200 } );
     } catch (err) {
-        console.error("ytdl error:", err);
         return NextResponse.json(
             { error: "Something went wrong" },
             { status: 500 }

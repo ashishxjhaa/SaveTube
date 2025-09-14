@@ -10,6 +10,7 @@ import Image from "next/image";
 import axios from "axios";
 import { WheelPicker } from "@ncdai/react-wheel-picker";
 import { Oval } from "react-loader-spinner";
+import { toast } from "sonner"
 
 
 export default function Main() {
@@ -38,8 +39,11 @@ export default function Main() {
     ];
 
     const isValidYoutube = (link: string): boolean => {
-        return link.includes("youtube.com") || link.includes("youtu.be");
+        const regex =
+            /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=[\w-]{11}|youtu\.be\/[\w-]{11})/;
+        return regex.test(link);
     };
+
 
     useEffect(() => {
         const id = setInterval(() => {
@@ -50,11 +54,11 @@ export default function Main() {
 
     const handleFetchVideo = async (): Promise<void> => {
         if (!url.trim()) {
-            alert("Please enter a link");
+            toast.error("Please enter a link");
             return;
         }
         if (!isValidYoutube(url)) {
-            alert("Enter a valid YouTube link");
+            toast.error("Enter a valid YouTube link");
             return;
         }
 
@@ -72,10 +76,10 @@ export default function Main() {
                     formats: data.formats,
                 });
             } else if (data.error) {
-                alert(data.error);
+                toast.error("Something Went Wrong");
             } 
         } catch (err) {
-            alert("Something went wrong while fetching video");
+            toast.error("Something went wrong while fetching video");
         } finally {
             setLoading(false);
         }
