@@ -9,6 +9,7 @@ import { MdDone } from "react-icons/md";
 import Image from "next/image";
 import axios from "axios";
 import { WheelPicker } from "@ncdai/react-wheel-picker";
+import { Oval } from "react-loader-spinner";
 
 
 export default function Main() {
@@ -136,8 +137,8 @@ export default function Main() {
             {(loading || video) && (
             <div className="flex justify-center p-3 border border-gray-600 rounded-2xl w-fit">
                 {loading ? (
-                    <div className="font-medium border border-dashed border-teal-500 bg-transparent h-fit w-fit rounded-xl p-3">
-                        Loader Here from any libraray then text,
+                    <div className="flex items-center gap-3 font-medium border border-dashed border-teal-500 bg-transparent h-fit w-fit rounded-xl p-3">
+                        <Oval height={28} width={28} color="#14b8a6" secondaryColor="#2dd4bf" strokeWidth={5} strokeWidthSecondary={5} visible={true} />
                         Fetching Video Data ...
                     </div>
                 ) : video ? (
