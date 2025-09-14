@@ -180,7 +180,6 @@ export default function Main() {
                                 value={quality}
                                 optionItemHeight={40}
                             />
-                            {/* <div className="px-18 py-10 rounded-md bg-gray-600"></div> */}
                         </div>
                         <div onClick={handleDownloadVideo} className="font-bold border bg-white hover:bg-white/95 text-black px-5 py-1 rounded-md cursor-pointer">
                             Download
