@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { GrFormNext } from "react-icons/gr";
 import { AnimatePresence, motion } from "framer-motion";
+import { IoCopyOutline } from "react-icons/io5";
+import { IoIosArrowDown } from "react-icons/io";
 
 
 export default function Main() {
@@ -77,16 +79,32 @@ export default function Main() {
         </div>
         </div>
 
-        <div className="flex flex-col w-full max-w-sm sm:max-w-2xl mx-auto pt-20 sm:pt-30">
-            <div className="flex justify-center p-3 border border-gray-600 rounded-2xl">
+        <div className="flex flex-col w-fit max-w-sm sm:max-w-2xl mx-auto pt-20 sm:pt-30">
+            <div className="flex justify-center p-3 border border-gray-600 rounded-2xl w-fit">
                 <div className="flex">
-                <div className="flex flex-col transition-all duration-300 border border-dashed border-teal-500 bg-transparent min-h-16 sm:min-h-20 w-full rounded-xl p-2">
-                    <div className="h-[28vh] sm:h-[29vh] min-w-[50vh] max-w-[50vh] rounded-lg shadow-md object-cover bg-white"></div>
-                    <div className="p-2 font-medium sm:font-bold text-sm sm:text-lg min-w-[50vh] max-w-[50vh]">FULL BOYCOTT! People are VERY ANGRY 😡| Ashneer POKES Salman, Kapil Sharma, Dhruv Rathee,</div>
-                </div>
-                <div>Video Link</div>
-                <div>choose Quality</div>
-                <div>Download</div>
+                    <div className="flex flex-col transition-all duration-300 border border-dashed border-teal-500 bg-transparent min-h-16 sm:min-h-20 w-fit rounded-xl p-3">
+                        <div className="h-[28vh] sm:h-[29vh] min-w-[50vh] max-w-[50vh] rounded-lg shadow-md object-cover bg-white"></div>
+                        <div className="px-2 pt-2 font-medium sm:font-bold text-sm sm:text-lg min-w-[50vh] max-w-[50vh]">FULL BOYCOTT! People are VERY ANGRY 😡| Ashneer POKES Salman, Kapil Sharma, Dhruv Rathee,</div>
+                    </div>
+                    
+                    <div className="flex flex-col items-center justify-center px-8">
+                        <div className="flex gap-2 items-center whitespace-nowrap">
+                            <div className="text-teal-300 font-medium sm:font-bold">Video Link: </div>
+                            <a href="#" className="hover:underline">
+                                Watch Now
+                            </a>
+                            <div className="rounded-lg bg-neutral-700 p-2 cursor-copy">
+                                <IoCopyOutline />
+                            </div>
+                        </div>
+                        <div className="py-4 flex flex-col gap-2">
+                            <div className="font-bold text-teal-300 flex items-center gap-2">Choose Quality <IoIosArrowDown /></div>
+                            <div className="px-18 py-10 rounded-md bg-gray-600"></div>
+                        </div>
+                        <div className="font-bold border bg-white hover:bg-white/95 text-black px-5 py-1 rounded-md cursor-pointer">
+                            Download
+                        </div>
+                    </div>
                 </div>
             </div>
         </div> 
