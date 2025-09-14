@@ -10,10 +10,10 @@ export async function POST(req: Request) {
         }
 
         const isValidYoutube =
-        url.includes("youtube.com") || url.includes("youtu.be");
+            url.includes("youtube.com") || url.includes("youtu.be");
 
         if (!isValidYoutube) {
-        return NextResponse.json({ error: "Invalid YouTube link" }, { status: 400 });
+            return NextResponse.json({ error: "Invalid YouTube link" }, { status: 400 });
         }
 
         let videoUrl = url;
@@ -22,15 +22,22 @@ export async function POST(req: Request) {
             videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
         }
 
-        const info = await ytdl.getInfo(videoUrl,
-            {
+        let info;
+        try {
+            info = await ytdl.getInfo(videoUrl, {
                 requestOptions: {
                     headers: {
                         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
                     }
                 }
-            }
-        );
+            });
+        } catch (err) {
+            console.error("YTDL ERROR:", err);
+            return NextResponse.json(
+                { error: "Failed to fetch video info. This likely doesn't work on Vercel. Please self-host your project." },
+                { status: 500 }
+            );
+        }
 
         const title = info.videoDetails.title;
         const thumbnails = info.videoDetails.thumbnails;
@@ -54,7 +61,6 @@ export async function POST(req: Request) {
             );
         }
 
-        
         return NextResponse.json({ 
             success: true,
             title,
@@ -63,8 +69,9 @@ export async function POST(req: Request) {
             formats : videoFormats,
         }, { status: 200 } );
     } catch (err) {
+        console.error("API ERROR:", err);
         return NextResponse.json(
-            { error: "Something went wrong" },
+            { error: "Something went wrong (likely due to host restrictions). Please self-host this project for YouTube downloads." },
             { status: 500 }
         );
     }
