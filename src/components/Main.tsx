@@ -30,6 +30,8 @@ export default function Main() {
     const [quality, setQuality] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
 
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
+
 
     const placeholders = [
         "Enter Youtube Video Url",
@@ -63,7 +65,7 @@ export default function Main() {
 
         setLoading(true);
         try {
-            const res = await axios.post("/api/download", { url });
+            const res = await axios.post(`${BACKEND_URL}/api/download`, { url });
             const data = res.data;
             
             if (data.success && data.formats?.length) {
@@ -102,7 +104,7 @@ export default function Main() {
         if (!selectedFormat) return;
         
         try {
-            const downloadUrl = `/api/download-video?url=${encodeURIComponent(video.url)}&itag=${selectedFormat.itag}`;
+            const downloadUrl = `${BACKEND_URL}/api/download-video?url=${encodeURIComponent(video.url)}&itag=${selectedFormat.itag}`;
             window.open(downloadUrl, "_blank");
             toast.success("Download started!");
         } catch (err) {
