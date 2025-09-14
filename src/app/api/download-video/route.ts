@@ -42,6 +42,7 @@ export async function GET(req: Request) {
     });
 
   } catch (err) {
+    console.error(err);
     return new Response(JSON.stringify({ error: "Something went wrong" }), { status: 500 });
   }
 }

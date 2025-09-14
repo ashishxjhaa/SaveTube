@@ -49,7 +49,7 @@ export default function Main() {
             setIndex((prev) => (prev + 1) % placeholders.length);
         }, 4000);
         return () => clearInterval(id);
-    }, []);
+    }, [placeholders.length]);
 
     const handleFetchVideo = async (): Promise<void> => {
         if (!url.trim()) {
@@ -75,7 +75,7 @@ export default function Main() {
                     formats: data.formats,
                 });
 
-                const uniqueQualities = Array.from(new Set(data.formats.map((f: any) => f.qualityLabel as string))).filter(q => q !== "unknown") as string[];
+                const uniqueQualities = Array.from(new Set(data.formats.map((f: { itag: number; container: string; qualityLabel: string; url: string }) => f.qualityLabel as string))).filter(q => q !== "unknown") as string[];
                 
                 uniqueQualities.sort((a, b) => {
                     const numA = parseInt(a) || 0;
