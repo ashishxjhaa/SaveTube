@@ -8,7 +8,6 @@ import { IoIosArrowDown } from "react-icons/io";
 import { MdDone } from "react-icons/md";
 import Image from "next/image";
 import axios from "axios";
-import { WheelPicker } from "@ncdai/react-wheel-picker";
 import { Oval } from "react-loader-spinner";
 import { toast } from "sonner"
 
@@ -27,8 +26,8 @@ export default function Main() {
     const [url, setUrl] = useState<string>("");
     const [loading, setLoading] = useState(false);
     const [video, setVideo] = useState<VideoType | null>(null);
-    const [quality, setQuality] = useState<string>("480p");
-    const qualities = ["360p", "480p", "720p", "1080p"];
+    const [qualities, setQualities] = useState<string[]>([]);
+    const [quality, setQuality] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
 
 
@@ -75,6 +74,17 @@ export default function Main() {
                     lengthSeconds: data.lengthSeconds,
                     formats: data.formats,
                 });
+
+                const uniqueQualities = Array.from(new Set(data.formats.map((f: any) => f.qualityLabel as string))).filter(q => q !== "unknown") as string[];
+                
+                uniqueQualities.sort((a, b) => {
+                    const numA = parseInt(a) || 0;
+                    const numB = parseInt(b) || 0;
+                    return numA - numB;
+                });
+                
+                setQualities(uniqueQualities);
+                setQuality(null);
             } else if (data.error) {
                 toast.error("Something Went Wrong");
             } 
@@ -174,14 +184,15 @@ export default function Main() {
                             <div className="font-bold text-teal-300 flex items-center gap-2">
                                 Choose Quality <IoIosArrowDown />
                             </div>
-                            <WheelPicker
-                                options={qualities.map(q => ({ label: q, value: q }))}
-                                onValueChange={(selected: string) => setQuality(selected)}
-                                value={quality}
-                                optionItemHeight={40}
-                            />
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {qualities.map(q => (
+                                    <button key={q} className={`px-3 py-1.5 rounded-md border cursor-pointer ${ quality === q ? "bg-white text-black border-white" : "bg-neutral-700 text-white border-gray-500" }`} onClick={() => setQuality(q)}>
+                                        {q}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                        <div onClick={handleDownloadVideo} className="font-bold border bg-white hover:bg-white/95 text-black px-5 py-1 rounded-md cursor-pointer">
+                        <div onClick={quality && video ? handleDownloadVideo : undefined} className={`font-bold border px-5 py-1 rounded-md ${ quality ? "bg-white hover:bg-white/95 text-black cursor-pointer" : "bg-gray-400 text-gray-700 cursor-not-allowed"}`}>
                             Download
                         </div>
                     </div>
