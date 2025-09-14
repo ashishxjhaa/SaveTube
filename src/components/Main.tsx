@@ -39,7 +39,7 @@ export default function Main() {
 
     const isValidYoutube = (link: string): boolean => {
         const regex =
-            /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=[\w-]{11}|youtu\.be\/[\w-]{11})/;
+            /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|shorts\/)[\w-]{11}|youtu\.be\/[\w-]{11})/;
         return regex.test(link);
     };
 
@@ -82,7 +82,7 @@ export default function Main() {
                     const numB = parseInt(b) || 0;
                     return numA - numB;
                 });
-                
+
                 setQualities(uniqueQualities);
                 setQuality(null);
             } else if (data.error) {
@@ -95,17 +95,19 @@ export default function Main() {
         }
     };
 
-    const handleDownloadVideo = () => {
-        if (!video || !video.formats?.length) return;
-        const selectedFormat = video.formats.find(f => f.qualityLabel === quality) || video.formats[0];
-        if (!selectedFormat.url) return;
+    const handleDownloadVideo = async () => {
+        if (!video || !quality) return;
+
+        const selectedFormat = video.formats.find(f => f.qualityLabel === quality);
+        if (!selectedFormat) return;
         
-        const link = document.createElement("a");
-        link.href = selectedFormat.url;
-        link.download = `${video.title}.mp4`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        try {
+            const downloadUrl = `/api/download-video?url=${encodeURIComponent(video.url)}&itag=${selectedFormat.itag}`;
+            window.open(downloadUrl, "_blank");
+            toast.success("Download started!");
+        } catch (err) {
+            toast.error("Download failed");
+        }
     };
 
     const formatDuration = (seconds: number) => {
@@ -181,7 +183,7 @@ export default function Main() {
                             </div>
                         </div>
                         <div className="py-4 flex flex-col gap-2">
-                            <div className="font-bold text-teal-300 flex items-center gap-2">
+                            <div className="font-medium sm:font-bold text-teal-300 flex items-center gap-2 mx-auto sm:mx-0">
                                 Choose Quality <IoIosArrowDown />
                             </div>
                             <div className="flex flex-wrap gap-2 mt-2">
