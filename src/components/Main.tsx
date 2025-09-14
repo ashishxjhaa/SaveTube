@@ -5,6 +5,7 @@ import { GrFormNext } from "react-icons/gr";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoCopyOutline } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
+import { MdDone } from "react-icons/md";
 import Image from "next/image";
 import axios from "axios";
 import { WheelPicker } from "@ncdai/react-wheel-picker";
@@ -16,6 +17,7 @@ export default function Main() {
         title: string;
         url: string;
         thumbnail: string;
+        lengthSeconds: number;
         formats: { itag: number; container: string; qualityLabel: string; url: string }[];
     };
 
@@ -25,6 +27,7 @@ export default function Main() {
     const [video, setVideo] = useState<VideoType | null>(null);
     const [quality, setQuality] = useState<string>("480p");
     const qualities = ["360p", "480p", "720p", "1080p"];
+    const [copied, setCopied] = useState(false);
 
 
     const placeholders = [
@@ -62,8 +65,9 @@ export default function Main() {
             if (data.success && data.formats?.length) {
                 setVideo({
                     title: data.title,
-                    url: data.formats[0].url,
+                    url: url,
                     thumbnail: data.thumbnail,
+                    lengthSeconds: data.lengthSeconds,
                     formats: data.formats,
                 });
             } else if (data.error) {
@@ -88,6 +92,14 @@ export default function Main() {
         link.click();
         document.body.removeChild(link);
     };
+
+    const formatDuration = (seconds: number) => {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        return h > 0 ? `${h}:${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")}` : `${m}:${s.toString().padStart(2,"0")}`;
+    };
+
 
 
   return (
@@ -131,7 +143,12 @@ export default function Main() {
                 ) : video ? (
                 <div className="flex flex-col sm:flex-row">
                     <div className="flex flex-col transition-all duration-300 border border-dashed border-teal-500 bg-transparent min-h-16 sm:min-h-20 w-fit rounded-xl p-3">
-                        <Image src={video.thumbnail} alt={video.title} width={500} height={300} className="h-[28vh] sm:h-[29vh] min-w-[50vh] max-w-[50vh] rounded-lg shadow-md object-cover bg-white" />
+                        <div className="relative">
+                            <Image src={video.thumbnail} alt={video.title} width={500} height={300} className="h-[28vh] sm:h-[29vh] min-w-[50vh] max-w-[50vh] rounded-lg shadow-md object-cover bg-white" />
+                            <span className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-0.5 rounded">
+                                {formatDuration(video.lengthSeconds)}
+                            </span>
+                        </div>
                         <div className="px-2 pt-2 font-medium sm:font-bold text-sm sm:text-lg min-w-[50vh] max-w-[50vh]">
                             {video.title}
                         </div>
@@ -143,8 +160,9 @@ export default function Main() {
                             <a href={video.url} target="_blank" className="hover:underline">
                                 Watch Now
                             </a>
-                            <div onClick={() => navigator.clipboard.writeText(video.url)} className="rounded-lg bg-neutral-700 p-2 cursor-copy">
-                                <IoCopyOutline />
+                            <div onClick={() => { navigator.clipboard.writeText(video.url); setCopied(true); setTimeout(() => setCopied(false), 800); }} className="rounded-lg bg-neutral-700 p-2 cursor-copy transition-all duration-300">
+                                {copied ? ( <MdDone /> ) : ( <IoCopyOutline /> )}
+                                
                             </div>
                         </div>
                         <div className="py-4 flex flex-col gap-2">
