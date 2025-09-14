@@ -21,7 +21,7 @@ export default function Navbar() {
                 <Link href="https://github.com/ashishxjhaa/SaveTube" onClick={() => new Audio("/switchtab.mp3").play()} target="_blank" className="opacity-70 flex items-center gap-2 mx-4 relative group transition-opacity hover:opacity-100">
                     <span className="flex items-center font-bold gap-2 transition-transform duration-500 ease-in-out group-hover:-translate-x-2">
                         <FaGithub />
-                        Star me on GitHub
+                        <div className="hidden sm:block">Star me on GitHub</div>
                     </span>
                     <IconArrowUpRight size={48} strokeWidth={1} className="absolute h-[22px] -right-8 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 text-white" />
                 </Link>

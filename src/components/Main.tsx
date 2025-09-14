@@ -49,7 +49,7 @@ export default function Main() {
             setIndex((prev) => (prev + 1) % placeholders.length);
         }, 4000);
         return () => clearInterval(id);
-    }, [placeholders.length]);
+    }, []);
 
     const handleFetchVideo = async (): Promise<void> => {
         if (!url.trim()) {
