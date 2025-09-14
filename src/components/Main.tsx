@@ -5,11 +5,27 @@ import { GrFormNext } from "react-icons/gr";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoCopyOutline } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
+import Image from "next/image";
+import axios from "axios";
+import { WheelPicker } from "@ncdai/react-wheel-picker";
 
 
 export default function Main() {
+
+    type VideoType = {
+        title: string;
+        url: string;
+        thumbnail: string;
+        formats: { itag: number; container: string; qualityLabel: string; url: string }[];
+    };
+
     const [index, setIndex] = useState(0);
     const [url, setUrl] = useState<string>("");
+    const [loading, setLoading] = useState(false);
+    const [video, setVideo] = useState<VideoType | null>(null);
+    const [quality, setQuality] = useState<string>("480p");
+    const qualities = ["360p", "480p", "720p", "1080p"];
+
 
     const placeholders = [
         "Enter Youtube Video Url",
@@ -28,7 +44,7 @@ export default function Main() {
         return () => clearInterval(id);
     }, []);
 
-    const handleDownload = async (): Promise<void> => {
+    const handleFetchVideo = async (): Promise<void> => {
         if (!url.trim()) {
             alert("Please enter a link");
             return;
@@ -38,14 +54,39 @@ export default function Main() {
             return;
         }
 
-        const res = await fetch("/api/download", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ url }),
-        });
+        setLoading(true);
+        try {
+            const res = await axios.post("/api/download", { url });
+            const data = res.data;
+            
+            if (data.success && data.formats?.length) {
+                setVideo({
+                    title: data.title,
+                    url: data.formats[0].url,
+                    thumbnail: data.thumbnail,
+                    formats: data.formats,
+                });
+            } else if (data.error) {
+                alert(data.error);
+            } 
+        } catch (err) {
+            alert("Something went wrong while fetching video");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        const data = await res.json();
-        console.log("API response:", data);
+    const handleDownloadVideo = () => {
+        if (!video || !video.formats?.length) return;
+        const selectedFormat = video.formats.find(f => f.qualityLabel === quality) || video.formats[0];
+        if (!selectedFormat.url) return;
+        
+        const link = document.createElement("a");
+        link.href = selectedFormat.url;
+        link.download = `${video.title}.mp4`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
 
@@ -66,49 +107,67 @@ export default function Main() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
                             transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-                            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
                         >
                             {placeholders[index]}
                         </motion.span>
                     )}
                 </AnimatePresence>
             </div>
-            <div onClick={handleDownload} className="bg-neutral-700 hover:bg-neutral-600 rounded-sm p-1 cursor-pointer group hover:shadow-xs shadow-slate-50">
+            <div onClick={handleFetchVideo} className="bg-neutral-700 hover:bg-neutral-600 rounded-sm p-1 cursor-pointer group hover:shadow-xs shadow-slate-50">
                 <GrFormNext className="w-8 h-8 text-teal-300 group-hover:text-teal-400" />
             </div>
         </div>
         </div>
 
         <div className="flex flex-col w-fit max-w-sm sm:max-w-2xl mx-auto pt-20 sm:pt-30">
+            {(loading || video) && (
             <div className="flex justify-center p-3 border border-gray-600 rounded-2xl w-fit">
-                <div className="flex">
+                {loading ? (
+                    <div className="font-medium border border-dashed border-teal-500 bg-transparent h-fit w-fit rounded-xl p-3">
+                        Loader Here from any libraray then text,
+                        Fetching Video Data ...
+                    </div>
+                ) : video ? (
+                <div className="flex flex-col sm:flex-row">
                     <div className="flex flex-col transition-all duration-300 border border-dashed border-teal-500 bg-transparent min-h-16 sm:min-h-20 w-fit rounded-xl p-3">
-                        <div className="h-[28vh] sm:h-[29vh] min-w-[50vh] max-w-[50vh] rounded-lg shadow-md object-cover bg-white"></div>
-                        <div className="px-2 pt-2 font-medium sm:font-bold text-sm sm:text-lg min-w-[50vh] max-w-[50vh]">FULL BOYCOTT! People are VERY ANGRY 😡| Ashneer POKES Salman, Kapil Sharma, Dhruv Rathee,</div>
+                        <Image src={video.thumbnail} alt={video.title} width={500} height={300} className="h-[28vh] sm:h-[29vh] min-w-[50vh] max-w-[50vh] rounded-lg shadow-md object-cover bg-white" />
+                        <div className="px-2 pt-2 font-medium sm:font-bold text-sm sm:text-lg min-w-[50vh] max-w-[50vh]">
+                            {video.title}
+                        </div>
                     </div>
                     
-                    <div className="flex flex-col items-center justify-center px-8">
+                    <div className="flex flex-col items-center justify-center px-8 py-5 sm:py-0">
                         <div className="flex gap-2 items-center whitespace-nowrap">
                             <div className="text-teal-300 font-medium sm:font-bold">Video Link: </div>
-                            <a href="#" className="hover:underline">
+                            <a href={video.url} target="_blank" className="hover:underline">
                                 Watch Now
                             </a>
-                            <div className="rounded-lg bg-neutral-700 p-2 cursor-copy">
+                            <div onClick={() => navigator.clipboard.writeText(video.url)} className="rounded-lg bg-neutral-700 p-2 cursor-copy">
                                 <IoCopyOutline />
                             </div>
                         </div>
                         <div className="py-4 flex flex-col gap-2">
-                            <div className="font-bold text-teal-300 flex items-center gap-2">Choose Quality <IoIosArrowDown /></div>
-                            <div className="px-18 py-10 rounded-md bg-gray-600"></div>
+                            <div className="font-bold text-teal-300 flex items-center gap-2">
+                                Choose Quality <IoIosArrowDown />
+                            </div>
+                            <WheelPicker
+                                options={qualities.map(q => ({ label: q, value: q }))}
+                                onValueChange={(selected: string) => setQuality(selected)}
+                                value={quality}
+                                optionItemHeight={40}
+                            />
+                            {/* <div className="px-18 py-10 rounded-md bg-gray-600"></div> */}
                         </div>
-                        <div className="font-bold border bg-white hover:bg-white/95 text-black px-5 py-1 rounded-md cursor-pointer">
+                        <div onClick={handleDownloadVideo} className="font-bold border bg-white hover:bg-white/95 text-black px-5 py-1 rounded-md cursor-pointer">
                             Download
                         </div>
                     </div>
                 </div>
+                ) : null}
             </div>
+            )}
         </div> 
-
 
     </div>
     );
