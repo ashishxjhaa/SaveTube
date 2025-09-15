@@ -65,7 +65,7 @@ export default function Main() {
 
         setLoading(true);
         try {
-            const res = await axios.post(`${BACKEND_URL}/api/download`, { url });
+            const res = await axios.get(`${BACKEND_URL}/api/download?url=${encodeURIComponent(url)}`);
             const data = res.data;
             
             if (data.success && data.formats?.length) {
