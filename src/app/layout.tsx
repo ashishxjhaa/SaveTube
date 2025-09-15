@@ -16,6 +16,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Save Tube",
   description: "Download YouTube video online",
+  icons: {
+  icon: "/favicon.ico?v=2",
+  shortcut: "/favicon.ico?v=2",
+}
 };
 
 export default function RootLayout({
