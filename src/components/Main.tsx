@@ -19,7 +19,7 @@ export default function Main() {
         url: string;
         thumbnail: string;
         lengthSeconds: number;
-        formats: { itag: number; container: string; qualityLabel: string; url: string }[];
+        formats: { itag: string | number; container: string; qualityLabel: string; url?: string }[];
     };
 
     const [index, setIndex] = useState(0);
