@@ -19,7 +19,7 @@ export default function Main() {
         url: string;
         thumbnail: string;
         lengthSeconds: number;
-        formats: { itag: string | number; container: string; qualityLabel: string; url?: string }[];
+        formats: { itag: number; container: string; qualityLabel: string; url: string }[];
     };
 
     const [index, setIndex] = useState(0);
@@ -29,8 +29,6 @@ export default function Main() {
     const [qualities, setQualities] = useState<string[]>([]);
     const [quality, setQuality] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
-
-    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 
     const placeholders = [
@@ -65,7 +63,7 @@ export default function Main() {
 
         setLoading(true);
         try {
-            const res = await axios.get(`${BACKEND_URL}/api/download?url=${encodeURIComponent(url)}`);
+            const res = await axios.post("/api/download", { url });
             const data = res.data;
             
             if (data.success && data.formats?.length) {
@@ -77,8 +75,8 @@ export default function Main() {
                     formats: data.formats,
                 });
 
-                const uniqueQualities = Array.from(new Set(data.formats.map((f: { itag: number; container: string; qualityLabel: string; url: string }) => f.qualityLabel as string))).filter(q => q !== "unknown") as string[];
-                
+                const uniqueQualities = Array.from(new Set(data.formats.map((f: { qualityLabel: string })=> f.qualityLabel))).filter(q => q && q !== "unknown") as string[];
+
                 uniqueQualities.sort((a, b) => {
                     const numA = parseInt(a) || 0;
                     const numB = parseInt(b) || 0;
@@ -102,13 +100,27 @@ export default function Main() {
 
         const selectedFormat = video.formats.find(f => f.qualityLabel === quality);
         if (!selectedFormat) return;
+
+        const toastId = toast.loading("Downloading...");
         
         try {
-            const downloadUrl = `${BACKEND_URL}/api/download-video?url=${encodeURIComponent(video.url)}&itag=${selectedFormat.itag}`;
-            window.open(downloadUrl, "_blank");
-            toast.success("Download started!");
+            const res = await axios.get(`/api/download-video?url=${encodeURIComponent(video.url)}&itag=${selectedFormat.itag}`, { responseType: "blob" });
+            const blob = res.data;
+            const ext = selectedFormat.container || "mp4";
+            const safeFileName = `${video.title}.${ext}`;
+
+            const blobUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = safeFileName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+            toast.success("Download started", { id: toastId });
         } catch (err) {
-            toast.error("Download failed");
+            toast.error("Download failed", { id: toastId });
         }
     };
 
